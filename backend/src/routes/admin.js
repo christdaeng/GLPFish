@@ -29,7 +29,6 @@ router.get('/users', async (req, res) => {
         `name.ilike.%${search}%,email.ilike.%${search}%`
       )
     }
-
     const { data, error, count } =
       await query.range(from, to)
 
@@ -46,5 +45,53 @@ router.get('/users', async (req, res) => {
     })
   }
 })
+router.get('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params
 
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('id, name, email, role, created_at')
+      .eq('id', id)
+      .single()
+
+    if (userError) {
+      return res.status(404).json({
+        error: 'User tidak ditemukan'
+      })
+    }
+
+    const { data: inspections, error: inspectionError } =
+      await supabase
+        .from('images')
+        .select(`
+          id,
+          file_name,
+          uploaded_at,
+          prediction_results (
+            grade,
+            label_text,
+            confidence_score,
+            predicted_at
+          )
+        `)
+        .eq('user_id', id)
+        .order('uploaded_at', { ascending: false })
+        .limit(10)
+
+    if (inspectionError) throw inspectionError
+
+    res.json({
+      user: {
+        ...user,
+        recentInspections: inspections || []
+      }
+    })
+
+  } catch (err) {
+    res.status(500).json({
+      error: err.message
+    })
+  }
+})
 export default router
