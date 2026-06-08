@@ -8,6 +8,7 @@ import authRoutes       from './routes/auth.js'
 import userRoutes       from './routes/user.js'
 import uploadRoutes     from './routes/upload.js'
 import inspectionRoutes from './routes/inspections.js'
+import adminRoutes      from './routes/admin.js'
 
 dotenv.config({ path: '.env.local' })
 
@@ -42,6 +43,7 @@ app.use('/api/auth',        authRoutes)
 app.use('/api/users',        userRoutes)
 app.use('/api/upload',      uploadRoutes)
 app.use('/api/inspections', inspectionRoutes)
+app.use('/api/admin', adminRoutes)
 
 // ── Health check ──────────────────────────────────────────
 app.get('/api/health', (_, res) => res.json({ status: 'ok' }))
