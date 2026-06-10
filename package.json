@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently -n \"FE,BE\" -c \"cyan,magenta\" \"npm run dev:fe\" \"npm run dev:be\"",
     "dev:fe": "vite",
-    "dev:be": "node --watch Backend/src/server.js",
+    "dev:be": "node --watch backend/src/server.js",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
